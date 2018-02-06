@@ -16,6 +16,21 @@ class Tree:
         self.name = name
         self.children = []
 
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        stack = [self]
+        while stack:
+            node = stack.pop()
+
+            if node.children:
+                for child in node.children:
+                    stack.append(child)
+            yield(node)
+
+        raise StopIteration
+
     def childAdd(self, subtree):
         """-----------------------------------------------------------------------------------------
         Add a child tree to the children list
@@ -46,6 +61,8 @@ class Tree:
 
 if __name__ == '__main__':
     root = Tree('root')
+    print(root)
+
     a = Tree('a')
     root.childAdd(a)
     b = Tree('b')
@@ -57,6 +74,12 @@ if __name__ == '__main__':
     print('depth first')
     root.depthFirst()
 
-    print(root)
+    print()
+    n = 0
+    for node in root:
+        print(node)
+        n += 1
+        if n > 4:
+            break
 
     exit(0)
