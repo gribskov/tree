@@ -92,6 +92,35 @@ class Tree:
 
         return None
 
+    def newick(self):
+        """-----------------------------------------------------------------------------------------
+        generate newick string
+        newick format show the tree as a set of nested parentheses in which the children of a node
+        are shown as a comma delimited list inside a pair of parenthess.
+        a --|
+            |--|
+        b --|  |
+               |--
+        c -----|
+        ((a,b),c)
+        :return: newick formatted tree
+        -----------------------------------------------------------------------------------------"""
+        newick = ''
+        punct = '('
+        if self.children:
+            for child in self.children:
+                newick += punct + child.newick()
+                punct = ','
+            newick += '){}'.format(self.name)
+        else:
+            newick = self.name
+
+        return newick
+
+
+# --------------------------------------------------------------------------------------------------
+# Testing
+# --------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
     root = Tree('root')
     print(root)
@@ -102,6 +131,7 @@ if __name__ == '__main__':
     root.childAdd(b)
     d = Tree('d')
     root.childAdd(d)
+
 
     c = Tree('c')
     b.childAdd(c)
@@ -124,4 +154,44 @@ if __name__ == '__main__':
     for node in root:
         print('name:', node.name)
 
+    print('\nNewick')
+    root = Tree('root')
+    a = Tree('a')
+    b = Tree('b')
+    root.childAdd(a)
+    root.childAdd(b)
+
+
+    c = Tree('c')
+    d = Tree('d')
+    a.childAdd(c)
+    a.childAdd(d)
+
+    e = Tree('e')
+    f = Tree('f')
+    b.childAdd(e)
+    b.childAdd(f)
+
+    print(root.newick())
+
+    print('\nNewick 2 - unnamed internal nodes with trifucation')
+    root = Tree('')
+    a = Tree('')
+    b = Tree('')
+    g = Tree('g')
+    root.childAdd(a)
+    root.childAdd(b)
+    root.childAdd(g)
+
+    c = Tree('c')
+    d = Tree('d')
+    a.childAdd(c)
+    a.childAdd(d)
+
+    e = Tree('e')
+    f = Tree('f')
+    b.childAdd(e)
+    b.childAdd(f)
+
+    print(root.newick())
     exit(0)
