@@ -59,13 +59,15 @@ class Tree:
         return
 
 
-def dfs(tree):
-    yield tree
-    for child in tree.children:
-        yield child
-        for node in child.children:
-            for x in dfs(node):
-                yield x
+    def dfs(self):
+        """
+        recursive generator for depth first search
+        :return: yields the next tree node
+        """
+        yield self
+        for child in self.children:
+            for node in child.dfs():
+                yield node
 
 
 if __name__ == '__main__':
@@ -88,7 +90,9 @@ if __name__ == '__main__':
     root.childAdd(d)
     e = Tree('e')
     c.childAdd(e)
+    f = Tree('f')
+    e.childAdd(f)
 
-    for node in dfs(root):
+    for node in root.dfs():
         print('name:', node.name)
     exit(0)
