@@ -80,6 +80,11 @@ class Tree:
             yield node
 
     def mode(self, mode='dfs'):
+        """-----------------------------------------------------------------------------------------
+        Selct the search mode as depth first (mode =='dfs') or breadth first (mode=='bfs')
+        TODO: should be more flexible about node names (e.g., case insensitive)
+        TODO: should warn if mode is unknown
+        -----------------------------------------------------------------------------------------"""
         if mode == 'bfs':
             self.iterator = self.bfs()
         else:
