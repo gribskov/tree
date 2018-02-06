@@ -16,20 +16,12 @@ class Tree:
         self.name = name
         self.children = []
 
-        # def __iter__(self):
-        #     return self
-        #
-        # def __next__(self):
-        #     stack = [self]
-        #     while stack:
-        #         node = stack.pop()
-        #
-        #         if node.children:
-        #             for child in node.children:
-        #                 stack.append(child)
-        #         yield(node)
-
-        # raise StopIteration
+    def __iter__(self):
+        """--------------------------------------------------------------------------------------
+        The iterator is the depth firts search generator function.
+        __next__ is not needed - it is supplied by the generator
+        --------------------------------------------------------------------------------------"""
+        return self.dfs()
 
     def childAdd(self, subtree):
         """-----------------------------------------------------------------------------------------
@@ -58,16 +50,39 @@ class Tree:
 
         return
 
-
     def dfs(self):
-        """
+        """-----------------------------------------------------------------------------------------
         recursive generator for depth first search
-        :return: yields the next tree node
-        """
+        :yield: yields the next tree node
+        -----------------------------------------------------------------------------------------"""
         yield self
         for child in self.children:
             for node in child.dfs():
                 yield node
+
+    def bfsNoRoot(self):
+        """-----------------------------------------------------------------------------------------
+        recursive generator for breadth first search. generator bfs is called first
+        to yield the root node.
+        Use bfs() to get the series with the root included.
+        :yield: next node in bfs order
+        -----------------------------------------------------------------------------------------"""
+        for child in self.children:
+            yield child
+
+        for child in self.children:
+            for node in child.bfsNoRoot():
+                yield node
+
+    def bfs(self):
+        """-----------------------------------------------------------------------------------------
+        breadth first search.  this outer wrapper is needed to return the node itself.
+        Use bfsNoRoot to get the same series without the root.
+        :yield: next node in bfs order
+        -----------------------------------------------------------------------------------------"""
+        yield (self)
+        for node in self.bfsNoRoot():
+            yield node
 
 
 if __name__ == '__main__':
@@ -78,21 +93,30 @@ if __name__ == '__main__':
     root.childAdd(a)
     b = Tree('b')
     root.childAdd(b)
-    c = Tree('c')
-    b.childAdd(c)
-    print('root:', root)
-
-    print('depth first')
-    root.depthFirst()
-
-    print('dfs')
     d = Tree('d')
     root.childAdd(d)
+
+    c = Tree('c')
+    b.childAdd(c)
+
     e = Tree('e')
     c.childAdd(e)
+
     f = Tree('f')
     e.childAdd(f)
 
+    print('root:', root)
+
+    print('\ndepth first search')
     for node in root.dfs():
+        print('dfs name:', node.name)
+
+    print('\nbreadth first search')
+    for node in root.bfs():
+        print('bfs name:', node.name)
+
+    print('\niterator')
+    for node in root:
         print('name:', node.name)
+
     exit(0)
