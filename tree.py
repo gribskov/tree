@@ -15,13 +15,14 @@ class Tree:
         -----------------------------------------------------------------------------------------"""
         self.name = name
         self.children = []
+        self.iterator = self.dfs()
 
     def __iter__(self):
         """--------------------------------------------------------------------------------------
         The iterator is the depth firts search generator function.
         __next__ is not needed - it is supplied by the generator
         --------------------------------------------------------------------------------------"""
-        return self.dfs()
+        return self.iterator
 
     def childAdd(self, subtree):
         """-----------------------------------------------------------------------------------------
@@ -84,6 +85,13 @@ class Tree:
         for node in self.bfsNoRoot():
             yield node
 
+    def mode(self, mode='dfs'):
+        if mode == 'bfs':
+            self.iterator = self.bfs()
+        else:
+            self.iterator = self.dfs()
+
+        return None
 
 if __name__ == '__main__':
     root = Tree('root')
@@ -107,15 +115,13 @@ if __name__ == '__main__':
 
     print('root:', root)
 
-    print('\ndepth first search')
-    for node in root.dfs():
-        print('dfs name:', node.name)
-
-    print('\nbreadth first search')
-    for node in root.bfs():
+    print('\nbreadth first search (using mode)')
+    root.mode('bfs')
+    for node in root:
         print('bfs name:', node.name)
 
-    print('\niterator')
+    print('\ndepth first search (using mode)')
+    root.mode('dfs')
     for node in root:
         print('name:', node.name)
 
