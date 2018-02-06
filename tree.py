@@ -18,10 +18,10 @@ class Tree:
         self.iterator = self.dfs()
 
     def __iter__(self):
-        """--------------------------------------------------------------------------------------
+        """-----------------------------------------------------------------------------------------
         The iterator is the depth firts search generator function.
         __next__ is not needed - it is supplied by the generator
-        --------------------------------------------------------------------------------------"""
+        -----------------------------------------------------------------------------------------"""
         return self.iterator
 
     def childAdd(self, subtree):
@@ -32,24 +32,18 @@ class Tree:
         self.children.append(subtree)
         return None
 
-    def depthFirst(self):
+    def order(self):
         """-----------------------------------------------------------------------------------------
-        traverse the tree in depth first order.
+        traverse the tree in the current mode order, dfs or bfs.
         kind of a dummy function since it does no more thant print
+        :return: list of nodes
         -----------------------------------------------------------------------------------------"""
+        nodelist = [self]
 
-        stack = [self]
+        for node in self:
+            nodelist.append(node)
 
-        while stack:
-            node = stack.pop()
-            # print(node, node.name)
-            if node.children:
-                for child in node.children:
-                    stack.append(child)
-
-            print(node, node.name)
-
-        return
+        return nodelist
 
     def dfs(self):
         """-----------------------------------------------------------------------------------------
