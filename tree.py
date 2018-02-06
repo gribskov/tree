@@ -122,25 +122,22 @@ class Tree:
 # Testing
 # --------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
+
     root = Tree('root')
-    print(root)
-
     a = Tree('a')
-    root.childAdd(a)
     b = Tree('b')
+    root.childAdd(a)
     root.childAdd(b)
-    d = Tree('d')
-    root.childAdd(d)
-
 
     c = Tree('c')
-    b.childAdd(c)
+    d = Tree('d')
+    a.childAdd(c)
+    a.childAdd(d)
 
     e = Tree('e')
-    c.childAdd(e)
-
     f = Tree('f')
-    e.childAdd(f)
+    b.childAdd(e)
+    b.childAdd(f)
 
     print('root:', root)
 
@@ -155,22 +152,6 @@ if __name__ == '__main__':
         print('name:', node.name)
 
     print('\nNewick')
-    root = Tree('root')
-    a = Tree('a')
-    b = Tree('b')
-    root.childAdd(a)
-    root.childAdd(b)
-
-
-    c = Tree('c')
-    d = Tree('d')
-    a.childAdd(c)
-    a.childAdd(d)
-
-    e = Tree('e')
-    f = Tree('f')
-    b.childAdd(e)
-    b.childAdd(f)
 
     print(root.newick())
 
