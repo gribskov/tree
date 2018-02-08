@@ -24,7 +24,7 @@ class Tree:
         -----------------------------------------------------------------------------------------"""
         self.name = None
         self.distance = None
-        self.comment = None         # often used for bootstrap
+        self.comment = None  # often used for bootstrap
         self.children = []
         self.infoAdd(name)
         self.iterator = self.dfs()
@@ -114,7 +114,7 @@ class Tree:
                |--
         c -----|
         ((a,b),c)
-        TODO: need to add branch length and comment
+
         :return: newick formatted tree
         -----------------------------------------------------------------------------------------"""
         newick = ''
@@ -245,7 +245,7 @@ class Tree:
         :param word: the text payload for the node
         :return: dict with keys name, distance, comment and value True/False
         -----------------------------------------------------------------------------------------"""
-        status = {'name':None, 'distance':None, 'comment':None }
+        status = {'name': None, 'distance': None, 'comment': None}
 
         if not word:
             return status
@@ -261,7 +261,7 @@ class Tree:
             if '[' in word:
                 dist, comment = word.split('[')
                 self.distance = float(dist)
-                self.comment = comment.replace(']','')
+                self.comment = comment.replace(']', '')
             else:
                 self.distance = float(word)
 
@@ -284,6 +284,19 @@ class Tree:
             info += '[' + self.comment + ']'
 
         return info
+
+    def size(self):
+        """-----------------------------------------------------------------------------------------
+        returns the number of nodes descending from this node.  Not very efficient if the tree is
+        large because it is non recursive
+
+        :return: number of descendents
+        -----------------------------------------------------------------------------------------"""
+        n = 0
+        for node in self:
+            n += 1
+
+        return n
 
 
 # --------------------------------------------------------------------------------------------------
