@@ -28,7 +28,6 @@ class Tree:
         self.mode = 'dfs'
         self.children = []
         self.infoAdd(name)
-        self.iterator = self.dfs()
 
     def __iter__(self):
         """-----------------------------------------------------------------------------------------
