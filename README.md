@@ -2,7 +2,8 @@
 A package for trees with multiple children at each node.  A node can have 0 to any number of children. A tree is reall just a root node.  All of its children are linke through the children list.
 
 ##Synopsis
-'''python
+### Tree creation
+```python
 # manual tree creation
 node_a = Tree('a')
 node_a.childNew('b')
@@ -18,3 +19,4 @@ root.childAdd(node_d)
 
 # create from Newick string, same tree as above
 root = Tree(newick='((b,c)a,(e,f)d)')
+```
