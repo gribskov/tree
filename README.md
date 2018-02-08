@@ -7,6 +7,7 @@ A package for trees with multiple children at each node.  A node can have 0 to a
 node.name       # string, the text string describing the node, or None
 node.distance   # float, the distance or branch length associated with the node (if parsable, or None)
 node.comment    # string, additional comments associated in the node (if parsable, or None)
+node.children   # list of Tree, the children of this node, may be empty
 ```
 ### Tree creation
 ```python
