@@ -15,7 +15,7 @@ Synopsis:
 
 class Tree:
 
-    def __init__(self, name=''):
+    def __init__(self, name='', newick=''):
 
         """-----------------------------------------------------------------------------------------
         Tree constructor
@@ -27,7 +27,10 @@ class Tree:
         self.comment = None  # often used for bootstrap
         self.mode = 'dfs'
         self.children = []
-        self.infoAdd(name)
+        if newick:
+            self.newickLoad(newick)
+        else:
+            self.infoAdd(name)
 
     def __iter__(self):
         """-----------------------------------------------------------------------------------------
@@ -338,7 +341,7 @@ if __name__ == '__main__':
     root = Tree('root')
     root.childAdd(a)
     root.childAdd(b)
-    
+
     print('root:', root)
     root.dump()
 
@@ -357,7 +360,7 @@ if __name__ == '__main__':
     print('\nNewick: write simple tree from previous tests')
     print(root.newick())
 
-    print('\nNewick - tree with unnamed internal nodes with trifucation')
+    print('\nNewick - manual tree with unnamed internal nodes with trifucation')
     a = Tree('')
     a.childNew('c')
     a.childNew('d')
@@ -383,15 +386,15 @@ if __name__ == '__main__':
     ]
     for tree_string in trees:
         print('\ntree in:', tree_string)
-        root = Tree()
-        root.newickLoad(tree_string)
+        root = Tree(newick=tree_string)
         print('tree out:', root.newick())
         root.orderBySize('right')
         print('tree out (right):', root.newick())
         root.orderBySize('left')
         print('tree out (left):', root.newick())
 
-    print('leaf nodes using tree 1')
+    print('\nleaf nodes using tree 2')
+    root = Tree(newick=trees[2])
     leaves = root.leaves()
     for node in leaves:
         print('    ', node.name, ':', node)
