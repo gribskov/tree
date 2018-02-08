@@ -5,7 +5,7 @@ General tree structure with multiple branches.
 Synopsis:
     root = Tree()           # create an empty tree node
     child = Tree('a')       # create a node named 'a'
-    root.chilAdd(child)    # add child node to tree
+    root.chilAdd(child)     # add child node to tree
 
     root = Tree()
     root.newickLoad('((a,b),c)'     # create tree from Newick string
@@ -41,10 +41,22 @@ class Tree:
 
     def childAdd(self, subtree):
         """-----------------------------------------------------------------------------------------
-        Add a child tree to the children list of this node.
+        Add a child tree to the children list of this node. child add is usful when you want to add
+        a subtree.  childNew() is simpler for adding a single child node.
         :param subtree: a Tree object
+        :return: None
         """
         self.children.append(subtree)
+        return None
+
+    def childNew(self, name=''):
+        """-----------------------------------------------------------------------------------------
+        Creates and adds a new child node.  Combines new node construction and childAdd.
+        :param name: text payload for the new node
+        :return: None
+        -----------------------------------------------------------------------------------------"""
+        newnode = Tree(name)
+        self.childAdd(newnode)
         return None
 
     def order(self):
@@ -315,22 +327,18 @@ class Tree:
 if __name__ == '__main__':
 
     print('Manual tree building')
-    root = Tree('root')
     a = Tree('a')
+    a.childNew('c')
+    a.childNew('d')
+
     b = Tree('b')
+    b.childNew('e')
+    b.childNew('f')
+
+    root = Tree('root')
     root.childAdd(a)
     root.childAdd(b)
-
-    c = Tree('c')
-    d = Tree('d')
-    a.childAdd(c)
-    a.childAdd(d)
-
-    e = Tree('e')
-    f = Tree('f')
-    b.childAdd(e)
-    b.childAdd(f)
-
+    
     print('root:', root)
     root.dump()
 
@@ -350,23 +358,18 @@ if __name__ == '__main__':
     print(root.newick())
 
     print('\nNewick - tree with unnamed internal nodes with trifucation')
-    root = Tree('')
     a = Tree('')
+    a.childNew('c')
+    a.childNew('d')
+
     b = Tree('')
-    g = Tree('g')
+    b.childNew('e')
+    b.childNew('f')
+
+    root = Tree('')
     root.childAdd(a)
     root.childAdd(b)
-    root.childAdd(g)
-
-    c = Tree('c')
-    d = Tree('d')
-    a.childAdd(c)
-    a.childAdd(d)
-
-    e = Tree('e')
-    f = Tree('f')
-    b.childAdd(e)
-    b.childAdd(f)
+    root.childNew('g')
 
     print(root.newick())
 
