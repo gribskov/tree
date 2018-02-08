@@ -19,11 +19,14 @@ class Tree:
 
         """-----------------------------------------------------------------------------------------
         Tree constructor
-        TODO: add branch length and bootstrap
-        :param id: string, the id of the new node
+
+        :param id: string, the id (distance, bootstrap) of the new node
         -----------------------------------------------------------------------------------------"""
-        self.name = name
+        self.name = None
+        self.distance = None
+        self.bootstrap = None
         self.children = []
+        self.infoAdd(name)
         self.iterator = self.dfs()
 
     def __iter__(self):
@@ -169,7 +172,7 @@ class Tree:
                 word = ''
 
             elif letter == ',':
-                node.name = word
+                node.infoAdd(word)
                 node = stack[-1]
                 newnode = Tree()
                 node.childAdd(newnode)
@@ -177,7 +180,7 @@ class Tree:
                 word = ''
 
             elif letter == ')':
-                node.name = word
+                node.infoAdd(word)
                 node = stack.pop()
                 word = ''
 
@@ -185,7 +188,7 @@ class Tree:
                 word += letter
 
         # when you finish, if there is anything in word it belongs to the root
-        self.name = word
+        self.infoAdd(word)
 
         return True
 
@@ -223,6 +226,24 @@ class Tree:
             n += 1
 
         return n
+
+    def infoAdd(self, word):
+        """-----------------------------------------------------------------------------------------
+        Breaks down tne text package of the node and stores in attributes name, distance, bootstrap
+        Possible formats
+        node_name
+        node_name:distance
+        node_name:distance[bootstrap]
+        :distance
+        :distance[bootstrap]
+
+        :param word: the text payload for the node
+        :return: dict with keys name, distance, bootstrap and value True/False
+        -----------------------------------------------------------------------------------------"""
+        # initial implementation just adds word to name
+        self.name = word
+
+        return {'name': True}
 
 
 # --------------------------------------------------------------------------------------------------
