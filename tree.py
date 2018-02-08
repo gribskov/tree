@@ -207,6 +207,23 @@ class Tree:
 
         return leaflist
 
+    def dump(self):
+        """-----------------------------------------------------------------------------------------
+        print a formatted version of the tree in the current search mode.
+        :return: n, the number of nodes in the tree
+        -----------------------------------------------------------------------------------------"""
+        n = 0
+        for node in self:
+            print('node {}: {}'.format(n, node))
+            if node.name:
+                print('    ', node.name)
+            print('    children:')
+            for child in node.children:
+                print('        ', child, ':', child.name)
+            n += 1
+
+        return n
+
 
 # --------------------------------------------------------------------------------------------------
 # Testing
@@ -280,10 +297,11 @@ if __name__ == '__main__':
         root = Tree()
         root.newickLoad(tree_string)
         print('tree out:', root.newick())
+        root.dump()
 
     print('leaf nodes using tree 1')
     leaves = root.leaves()
     for node in leaves:
-        print( '    ', node.name, ':', node)
+        print('    ', node.name, ':', node)
 
     exit(0)
