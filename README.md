@@ -1,5 +1,5 @@
 # Tree.py
-A package for trees with multiple children at each node.  A node can have 0 to any number of children. A tree is reall just a root node.  All of its children are linke through the children list.
+A package for trees with multiple children at each node.  A node can have 0 to any number of children. A tree is really just a root node.  All of its children are linked through the children list.
 
 ## Synopsis
 ### Basic attributes
