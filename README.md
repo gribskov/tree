@@ -54,7 +54,8 @@ for child in node.children:
 ### Newick formatted trees
 Newick is a common exchange format for trees in phylogenitics.  An example is
 ((raccoon:19.2, bear:6.8):0.9, ((sea_lion:13.0, seal:12.0):7.5, ((monkey:100.9, cat:47.1):20.6, weasel:18.9): 2.09):3.9, dog: 25.5);
-```root.newickLoad(newick_string)
+```
+root.newickLoad(newick_string)
 print(root.newick()
 ```
 ### Miscellaneous methods
