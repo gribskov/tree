@@ -222,7 +222,7 @@ class Tree:
             print('{}node {}: {}'.format(space, n, node))
             if node.name:
                 print('{}node: {}'.format(space * 2, node.name))
-            print('{}children:'.format(space*2))
+            print('{}children:'.format(space * 2))
             for child in node.children:
                 print('{}{}:{}'.format(space * 3, child, child.name))
             n += 1
@@ -246,6 +246,24 @@ class Tree:
         self.name = word
 
         return {'name': True}
+
+    def infoGet(self):
+        """-----------------------------------------------------------------------------------------
+        Combine the name, distance, and bootstrap value into a string and return
+        format:
+            name:distance[bootstrap]
+
+        :return: formatted string for printing in newick tree
+        -----------------------------------------------------------------------------------------"""
+        info = ''
+        if name:
+            info += self.name
+        if distance:
+            info += self.distance
+        if bootstrap:
+            info += '[' + self.bootstrap + ']'
+
+        return info
 
 
 # --------------------------------------------------------------------------------------------------
