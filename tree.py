@@ -210,19 +210,21 @@ class Tree:
 
         return leaflist
 
-    def dump(self):
+    def dump(self, indent=4):
         """-----------------------------------------------------------------------------------------
         print a formatted version of the tree in the current search mode.
         :return: n, the number of nodes in the tree
         -----------------------------------------------------------------------------------------"""
         n = 0
+        space = ' ' * indent
+        print('\ndump of {}'.format(self))
         for node in self:
-            print('node {}: {}'.format(n, node))
+            print('{}node {}: {}'.format(space, n, node))
             if node.name:
-                print('    ', node.name)
-            print('    children:')
+                print('{}node: {}'.format(space * 2, node.name))
+            print('{}children:'.format(space*2))
             for child in node.children:
-                print('        ', child, ':', child.name)
+                print('{}{}:{}'.format(space * 3, child, child.name))
             n += 1
 
         return n
@@ -269,6 +271,7 @@ if __name__ == '__main__':
     b.childAdd(f)
 
     print('root:', root)
+    root.dump()
 
     print('\nbreadth first search (using mode)')
     print('    set mode to bfs')
@@ -318,7 +321,6 @@ if __name__ == '__main__':
         root = Tree()
         root.newickLoad(tree_string)
         print('tree out:', root.newick())
-        root.dump()
 
     print('leaf nodes using tree 1')
     leaves = root.leaves()
