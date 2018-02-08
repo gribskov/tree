@@ -20,11 +20,11 @@ class Tree:
         """-----------------------------------------------------------------------------------------
         Tree constructor
 
-        :param id: string, the id (distance, bootstrap) of the new node
+        :param id: string, the id (distance, comment) of the new node
         -----------------------------------------------------------------------------------------"""
         self.name = None
         self.distance = None
-        self.bootstrap = None
+        self.comment = None         # often used for bootstrap
         self.children = []
         self.infoAdd(name)
         self.iterator = self.dfs()
@@ -114,7 +114,7 @@ class Tree:
                |--
         c -----|
         ((a,b),c)
-        TODO: need to add branch length and bootstrap
+        TODO: need to add branch length and comment
         :return: newick formatted tree
         -----------------------------------------------------------------------------------------"""
         newick = ''
@@ -123,9 +123,9 @@ class Tree:
             for child in self.children:
                 newick += punct + child.newick()
                 punct = ','
-            newick += '){}'.format(self.name)
+            newick += '){}'.format(self.infoGet())
         else:
-            newick = self.name
+            newick = self.infoGet()
 
         return newick
 
@@ -231,37 +231,57 @@ class Tree:
 
     def infoAdd(self, word):
         """-----------------------------------------------------------------------------------------
-        Breaks down tne text package of the node and stores in attributes name, distance, bootstrap
+        Breaks down tne text package of the node and stores in attributes name, distance, comment
         Possible formats
         node_name
         node_name:distance
-        node_name:distance[bootstrap]
+        node_name:distance[comment]
         :distance
-        :distance[bootstrap]
+        :distance[comment]
+
+        note that the [comment] notation is often used for bootstrap values: however, because it
+        could be any comment, they are only saved as strings.
 
         :param word: the text payload for the node
-        :return: dict with keys name, distance, bootstrap and value True/False
+        :return: dict with keys name, distance, comment and value True/False
         -----------------------------------------------------------------------------------------"""
-        # initial implementation just adds word to name
-        self.name = word
+        status = {'name':None, 'distance':None, 'comment':None }
 
-        return {'name': True}
+        if not word:
+            return status
+
+        self.name = word
+        status['name'] = True
+
+        if ':' in word:
+            status['distance'] = True
+            name, word = word.split(':')
+            self.name = name
+
+            if '[' in word:
+                dist, comment = word.split('[')
+                self.distance = float(dist)
+                self.comment = comment.replace(']','')
+            else:
+                self.distance = float(word)
+
+        return status
 
     def infoGet(self):
         """-----------------------------------------------------------------------------------------
-        Combine the name, distance, and bootstrap value into a string and return
+        Combine the name, distance, and comment value into a string and return
         format:
-            name:distance[bootstrap]
+            name:distance[comment]
 
         :return: formatted string for printing in newick tree
         -----------------------------------------------------------------------------------------"""
         info = ''
-        if name:
+        if self.name:
             info += self.name
-        if distance:
-            info += self.distance
-        if bootstrap:
-            info += '[' + self.bootstrap + ']'
+        if self.distance:
+            info += ':' + str(self.distance)
+        if self.comment:
+            info += '[' + self.comment + ']'
 
         return info
 
@@ -330,6 +350,7 @@ if __name__ == '__main__':
     print('\nNewick format - read and write test trees from Felsenstein:')
     trees = [
         '((a,b),(c,d,e),f);',
+        '((a:1,b:2):3[100],(c:3,d:4,e:5):2[95.1],f:6):2;',
         '((raccoon:19.2, bear:6.8):0.9, ((sea_lion:13.0, seal:12.0):7.5, ((monkey:100.9, cat:47.1):20.6, weasel:18.9): 2.09):3.9, dog: 25.5);',
         '(Bovine: 0.7, (Gibbon:0.4, (Orang:0.3, (Gorilla:0.2, (Chimp:0.2, Human:0.1): 0.1):0.1):0.2):0.5, Mouse: 1.2):0.1\n',
         '(Bovine: 0.69, (Hylobates:0.36, (Pongo:0.34, (G._Gorilla:0.17, (P._paniscus:0.19, H._sapiens:0.12): 0.08):0.06):0.15):0.55, Rodent: 1.21)'
