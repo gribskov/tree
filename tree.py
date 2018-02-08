@@ -20,11 +20,12 @@ class Tree:
         """-----------------------------------------------------------------------------------------
         Tree constructor
 
-        :param id: string, the id (distance, comment) of the new node
+        :param name: string, the id (distance, comment) of the new node
         -----------------------------------------------------------------------------------------"""
         self.name = None
         self.distance = None
         self.comment = None  # often used for bootstrap
+        self.mode = 'dfs'
         self.children = []
         self.infoAdd(name)
         self.iterator = self.dfs()
@@ -34,7 +35,10 @@ class Tree:
         The iterator is the depth first search generator function.
         __next__ is not needed - it is supplied by the generator
         -----------------------------------------------------------------------------------------"""
-        return self.iterator
+        if self.mode == 'dfs':
+            return self.dfs()
+        else:
+            return self.bfs()
 
     def childAdd(self, subtree):
         """-----------------------------------------------------------------------------------------
@@ -89,19 +93,6 @@ class Tree:
         yield (self)
         for node in self.bfsNoRoot():
             yield node
-
-    def mode(self, mode='dfs'):
-        """-----------------------------------------------------------------------------------------
-        Selct the search mode as depth first (mode =='dfs') or breadth first (mode=='bfs')
-        TODO: should be more flexible about node names (e.g., case insensitive)
-        TODO: should warn if mode is unknown
-        -----------------------------------------------------------------------------------------"""
-        if mode == 'bfs':
-            self.iterator = self.bfs()
-        else:
-            self.iterator = self.dfs()
-
-        return None
 
     def newick(self):
         """-----------------------------------------------------------------------------------------
@@ -208,8 +199,6 @@ class Tree:
 
         return leaflist
 
-        return leaflist
-
     def dump(self, indent=4):
         """-----------------------------------------------------------------------------------------
         print a formatted version of the tree in the current search mode.
@@ -298,6 +287,28 @@ class Tree:
 
         return n
 
+    def orderBySize(self, dir='left'):
+        """-----------------------------------------------------------------------------------------
+        Reorder the tree so the child with the largest size is on the left
+
+        :param dir: 'right'/'left' the biggest clades go on the left or right respectively
+        :return: True
+        -----------------------------------------------------------------------------------------"""
+
+        def bySize(node):
+            return node.size()
+
+        if dir == 'left':
+            for node in self:
+                if node.children:
+                    self.children = sorted(self.children, reverse=True, key=bySize)
+        else:
+            for node in self:
+                if node.children:
+                    self.children = sorted(self.children, key=bySize)
+
+        return True
+
 
 # --------------------------------------------------------------------------------------------------
 # Testing
@@ -326,13 +337,13 @@ if __name__ == '__main__':
 
     print('\nbreadth first search (using mode)')
     print('    set mode to bfs')
-    root.mode('bfs')
+    root.mode = 'bfs'
     for node in root:
         print('    bfs name:', node.name)
 
     print('\ndepth first search (using mode)')
     print('    set mode to dfs')
-    root.mode('dfs')
+    root.mode = 'dfs'
     for node in root:
         print('    name:', node.name)
 
@@ -369,10 +380,14 @@ if __name__ == '__main__':
         '(Bovine: 0.69, (Hylobates:0.36, (Pongo:0.34, (G._Gorilla:0.17, (P._paniscus:0.19, H._sapiens:0.12): 0.08):0.06):0.15):0.55, Rodent: 1.21)'
     ]
     for tree_string in trees:
-        print('tree in:', tree_string)
+        print('\ntree in:', tree_string)
         root = Tree()
         root.newickLoad(tree_string)
         print('tree out:', root.newick())
+        root.orderBySize('right')
+        print('tree out (right):', root.newick())
+        root.orderBySize('left')
+        print('tree out (left):', root.newick())
 
     print('leaf nodes using tree 1')
     leaves = root.leaves()
