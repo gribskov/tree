@@ -189,6 +189,24 @@ class Tree:
 
         return True
 
+    def leaves(self):
+        """-----------------------------------------------------------------------------------------
+        return a list of leaf nodes ordered by the current search mode.  A leaf is a node with no
+        children.
+
+        :return: list of nodes
+        -----------------------------------------------------------------------------------------"""
+        leaflist = []
+        for node in self:
+            if node.children:
+                continue
+            else:
+                leaflist.append(node)
+
+        return leaflist
+
+        return leaflist
+
 
 # --------------------------------------------------------------------------------------------------
 # Testing
@@ -262,5 +280,10 @@ if __name__ == '__main__':
         root = Tree()
         root.newickLoad(tree_string)
         print('tree out:', root.newick())
+
+    print('leaf nodes using tree 1')
+    leaves = root.leaves()
+    for node in leaves:
+        print( '    ', node.name, ':', node)
 
     exit(0)
