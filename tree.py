@@ -20,10 +20,10 @@ class Tree:
         """-----------------------------------------------------------------------------------------
         Tree constructor
 
-        :param name: string, the id (distance, comment) of the new node
+        :param name: string, the id (branchlen, comment) of the new node
         -----------------------------------------------------------------------------------------"""
         self.name = None
-        self.distance = None
+        self.branchlen = None
         self.comment = None  # often used for bootstrap
         self.mode = 'dfs'
         self.children = []
@@ -234,21 +234,21 @@ class Tree:
 
     def infoAdd(self, word):
         """-----------------------------------------------------------------------------------------
-        Breaks down tne text package of the node and stores in attributes name, distance, comment
+        Breaks down tne text package of the node and stores in attributes name, branchlen, comment
         Possible formats
         node_name
-        node_name:distance
-        node_name:distance[comment]
-        :distance
-        :distance[comment]
+        node_name:branchlen
+        node_name:branchlen[comment]
+        :branchlen
+        :branchlen[comment]
 
         note that the [comment] notation is often used for bootstrap values: however, because it
         could be any comment, they are only saved as strings.
 
         :param word: the text payload for the node
-        :return: dict with keys name, distance, comment and value True/False
+        :return: dict with keys name, branchlen, comment and value True/False
         -----------------------------------------------------------------------------------------"""
-        status = {'name': None, 'distance': None, 'comment': None}
+        status = {'name': None, 'branchlen': None, 'comment': None}
 
         if not word:
             return status
@@ -257,32 +257,32 @@ class Tree:
         status['name'] = True
 
         if ':' in word:
-            status['distance'] = True
+            status['branchlen'] = True
             name, word = word.split(':')
             self.name = name
 
             if '[' in word:
                 dist, comment = word.split('[')
-                self.distance = float(dist)
+                self.branchlen = float(dist)
                 self.comment = comment.replace(']', '')
             else:
-                self.distance = float(word)
+                self.branchlen = float(word)
 
         return status
 
     def infoGet(self):
         """-----------------------------------------------------------------------------------------
-        Combine the name, distance, and comment value into a string and return
+        Combine the name, branchlen, and comment value into a string and return
         format:
-            name:distance[comment]
+            name:branchlen[comment]
 
         :return: formatted string for printing in newick tree
         -----------------------------------------------------------------------------------------"""
         info = ''
         if self.name:
             info += self.name
-        if self.distance:
-            info += ':' + str(self.distance)
+        if self.branchlen:
+            info += ':' + str(self.branchlen)
         if self.comment:
             info += '[' + self.comment + ']'
 
