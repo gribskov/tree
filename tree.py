@@ -62,6 +62,25 @@ class Tree:
         self.childAdd(newnode)
         return None
 
+    def do(self, function):
+        """-----------------------------------------------------------------------------------------
+        Perform the action in function at every node of the tree.  Iteration follows the current
+        iteration mode. This can be used to
+        1) perform an calculation across the tree
+        2) add new attributes to every node of the tree
+
+        the function should take one argument, a tree node
+
+        :param function: a function to be called at every node
+        :return: n, the number of nodes traversed
+        -----------------------------------------------------------------------------------------"""
+        n = 0
+        for node in self:
+            function(node)
+            n += 1
+
+        return n
+
     def order(self):
         """-----------------------------------------------------------------------------------------
         return a list of nodes that traverse the tree in the current mode order, dfs or bfs.
@@ -398,5 +417,17 @@ if __name__ == '__main__':
     leaves = root.leaves()
     for node in leaves:
         print('    ', node.name, ':', node)
+
+    print('\nTesting do method - add treelen to every node')
+
+
+    def addTreeLen(node):
+        node.treelen = node.size()
+        return
+
+
+    root.do(addTreeLen)
+    for node in root:
+        print('    treelen: {}\tnode: {}'.format(node.treelen, node.name))
 
     exit(0)
