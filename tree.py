@@ -14,8 +14,9 @@ Synopsis:
 
 
 class Tree:
+    nnodes = 0
 
-    def __init__(self, name='', newick=''):
+    def __init__(self, name='', mode='dfs_stack', newick=''):
 
         """-----------------------------------------------------------------------------------------
         Tree constructor
@@ -24,27 +25,32 @@ class Tree:
         -----------------------------------------------------------------------------------------"""
         self.name = None
         self.branchlen = None
-        self.comment = None  # often used for bootstrap
-        self.mode = 'dfs'
         self.children = []
+        self.comment = None  # often used for bootstrap
+        if mode:
+            self.mode = mode
         if newick:
             self.newickLoad(newick)
         else:
             self.infoAdd(name)
+
+        Tree.nnodes += 1
 
     def __iter__(self):
         """-----------------------------------------------------------------------------------------
         The iterator is the depth first search generator function.
         __next__ is not needed - it is supplied by the generator
         -----------------------------------------------------------------------------------------"""
-        if self.mode == 'dfs':
+        if self.mode == 'dfs_stack':
+            return self.tree_gen_stack()
+        elif self.mode == 'dfs':
             return self.dfs()
         else:
             return self.bfs()
 
     def childAdd(self, subtree):
         """-----------------------------------------------------------------------------------------
-        Add a child tree to the children list of this node. child add is usful when you want to add
+        Add a child tree to the children list of this node. child add is useful when you want to add
         a subtree.  childNew() is simpler for adding a single child node.
         :param subtree: a Tree object
         :return: None
@@ -66,7 +72,7 @@ class Tree:
         """-----------------------------------------------------------------------------------------
         Perform the action in function at every node of the tree.  Iteration follows the current
         iteration mode. This can be used to
-        1) perform an calculation across the tree
+        1) perform a calculation across the tree
         2) add new attributes to every node of the tree
 
         the function should take one argument, a tree node
@@ -127,11 +133,27 @@ class Tree:
         for node in self.bfsNoRoot():
             yield node
 
+    def tree_gen_stack(self):
+        """---------------------------------------------------------------------------------------------
+        generator for dfs traversal of tree, using stack rather than recursion
+
+        :param root: Tree object      root node of tree
+        :yield: Tree object           next node in tree
+        ---------------------------------------------------------------------------------------------"""
+        stack = []
+        stack.append(self)
+        while stack:
+            node = stack.pop()
+            yield node
+
+            for child in node.children[::-1]:
+                stack.append(child)
+
     def newick(self):
         """-----------------------------------------------------------------------------------------
         generate newick string
         newick format show the tree as a set of nested parentheses in which the children of a node
-        are shown as a comma delimited list inside a pair of parenthess.
+        are shown as a comma delimited list inside a pair of parentheses.
         a --|
             |--|
         b --|  |
