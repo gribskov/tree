@@ -58,13 +58,24 @@ class Tree:
         self.children.append(subtree)
         return None
 
+    def createNode(self):
+        """-----------------------------------------------------------------------------------------
+        creates a new node (Tree object) and returns it. it may seem stupid, but this allows
+        functions such as childNew() and newickLoad() to work for subclasses by just overriding
+        this single method
+
+        :return: Tree
+        -----------------------------------------------------------------------------------------"""
+        return Tree()
+
     def childNew(self, name=''):
         """-----------------------------------------------------------------------------------------
         Creates and adds a new child node.  Combines new node construction and childAdd.
         :param name: text payload for the new node
         :return: None
         -----------------------------------------------------------------------------------------"""
-        newnode = Tree(name)
+        newnode = self.createNode()
+        newnode.name = name
         self.childAdd(newnode)
         return None
 
@@ -211,7 +222,7 @@ class Tree:
             if letter.isspace():
                 continue
             elif letter == '(':
-                newnode = Tree()
+                newnode = self.createNode()
                 node.childAdd(newnode)
                 stack.append(node)
                 node = newnode
@@ -220,7 +231,7 @@ class Tree:
             elif letter == ',':
                 node.infoAdd(word)
                 node = stack[-1]
-                newnode = Tree()
+                newnode = self.createNode()
                 node.childAdd(newnode)
                 node = newnode
                 word = ''
